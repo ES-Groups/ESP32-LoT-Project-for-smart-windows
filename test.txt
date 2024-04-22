@@ -1,0 +1,128 @@
+# class VS1838B:
+    # def __init__(self, gpioNum):
+    #     self.gpioNum = gpioNum
+    #     #管脚初始化，并设置为上拉电阻
+    #     gpioNum.init(machine.Pin.IN, machine.Pin.PULL_UP)
+ 
+    #     #定义管脚出现电压变化时的回调函数，包含上升沿和下降沿
+    #     gpioNum.irq(
+    #         trigger = machine.Pin.IRQ_RISING | machine.Pin.IRQ_FALLING,
+    #         handler= self.__logHandler)
+ 
+    #     self.logList = [0 for x in range(1000)]
+    #     self.index = 0
+    #     self.start = 0
+    #     #所获得的遥控器键码
+    #     self.redCode = self.__loop()
+ 
+    # #管脚发生变化时的回调函数
+    # def __logHandler(self, source):
+    #     '''
+    #     由于采用的是上拉电阻，使得管脚默认为高电平状态
+    #     '''
+    #     thisComeInTime = utime.ticks_us()
+    #     #用于第一次发生管脚电压变化时的记录
+    #     if self.start ==0:
+    #         self.start = thisComeInTime
+    #         self.index = 0
+    #         return
+    #     #循环记录每次值
+    #     self.logList[self.index] = utime.ticks_diff(thisComeInTime, self.start)
+    #     self.start = thisComeInTime
+    #     self.index += 1
+    #     #如果连续不停的按下某按键会出现数量超过1000的现象，这里做下初始化处理
+    #     if self.index >= 1000:
+    #         self.logList = [0 for x in range(1000)]
+    #         self.index = 0
+    #         self.start = 0
+ 
+ 
+    # #从获得的所有数据中拆出 数据码 和 数据反码
+    # def getUsefulCode(self, timeList):
+    #     n=0
+    #     for i in timeList:
+    #         firstTimeTrue = (timeList[n] >= 8000) & (timeList[n]<= 10000)
+    #         seconTimeTrue = (timeList[n+1] >= 4000) & (timeList[n+1]<= 5000)
+    #         if firstTimeTrue & seconTimeTrue:
+    #             return timeList[n+34: n+65]
+    #         n += 1
+ 
+    # #将数据码转换为整数数组，高电平为1，低电平为0，注意这里的顺序与实际正好相反，所有从后往前进行解码
+    # def getBinCode(self, usefulCode):
+    #     n=15
+    #     binCodeList =[]
+    #     for i in usefulCode:
+    #         if (usefulCode[n]+usefulCode[n-1])>2000:
+    #             binCodeList.append(1)
+    #         else:
+    #             binCodeList.append(0)
+    #         n-=2
+    #         if n<0:
+    #             return binCodeList
+ 
+    # def __loop(self):
+    #     while True:
+    #         utime.sleep_ms(200)
+    #         if utime.ticks_diff(
+    #                 utime.ticks_us(),
+    #                 self.start) > 800000 and self.index > 0:
+    #             thisIRcodeList = []
+    #             n = 0
+    #             for i in self.logList:
+    #                 #当被赋值的数据列表中有连续6个0时，则提取这6个0之前的数据作为全部数据
+    #                 if (self.logList[n] == 0) and (self.logList[n +
+    #                     1] == 0) and (self.logList[n +
+    #                     2] == 0) and (self.logList[n +
+    #                     3] == 0) and (self.logList[n +
+    #                     4] == 0) and (self.logList[n +
+    #                     5] == 0):
+    #                     #获得的所有数据
+    #                     # print(thisIRcodeList)
+    #                     # print(str(len(thisIRcodeList)))
+ 
+    #                     #从所有数据中拆分出有效数据码，同样也可以拆分出数据反码进行校验，这里省略
+    #                     usefulCode= self.getUsefulCode(thisIRcodeList)
+    #                     #print(usefulCode)
+ 
+    #                     #获取二进制整数数组
+    #                     binCode = self.getBinCode(usefulCode)
+    #                     #print(binCode)
+ 
+    #                     #把二进制整数数组转为10进制
+    #                     toInt = int("".join(map(str, binCode)),2)
+    #                     toInt = hex(toInt)
+    #                     #print(toInt)
+ 
+    #                     #返回键码前，把数据进行初始化，否则下次解析时会出错
+    #                     self.logList = [0 for x in range(1000)]
+    #                     self.index = 0
+    #                     self.start = 0
+    #                     return toInt
+    #                 else:
+    #                     thisIRcodeList.append(i)
+    #                     n += 1
+
+
+
+
+    # gpioNum = Pin(5)
+    # getcode = VS1838B(gpioNum=gpioNum) #红外模块未收到数据时会停留在这里
+    # p2 = Pin(2, Pin.OUT)
+    # while True:
+    #     try:
+    #         codeValue = getcode.redCode
+    #         print(codeValue)
+    #         if str(codeValue) == "0x45":
+    #             p2.off() #Open led
+    #         if str(codeValue) == "0x46":
+    #             p2.on() #Close led
+    #     except:
+    #         pass
+
+
+
+
+
+
+
+

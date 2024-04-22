@@ -1,0 +1,38 @@
+<html>
+<h1 style="color: #5e9ca0; text-align: center;">
+    <span style="color: #ff0000;">
+        Wi-Fi config
+    </span>
+</h1>
+<form action="configure" method="post">
+    <table style="margin-left: auto; margin-right: auto;">
+        <tbody>
+            <tr>
+                <td>wlan user name:</td>
+                <td><input name="ssid1" /></td>
+                <td></td>
+                <td>password:</td>
+                <td><input name="password" type="password" /></td>
+                <td>
+                    <p style="text-align: center;">
+                        <input type="submit" value="confirm" />
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="radio" name="ssid2" value="{0}" />{0}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<p>&nbsp;</p>
+<hr />
+<h3 align="center">
+    <span style="color: #00a6ff;">
+        choose wifi and input pwd, saved at "%(filename)s".
+    </span>
+</h3>
+
+</html>
